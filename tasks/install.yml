@@ -1,0 +1,25 @@
+---
+- name: Install package
+  package:
+    name: vim
+    state: present
+
+- name: Create a new vimrc for root
+  template:
+    src: vimrc.j2
+    dest: "{{ vim_users_home[item] }}/.vimrc"
+    mode: '0640'
+  with_items: "{{ vim_users_configure }}"
+
+- name: Ensure .vim folder exists
+  file:
+    path: "{{ vim_users_home[item] }}/.vim"
+    state: directory
+    mode: '0755'
+  with_items: "{{ vim_users_configure }}"
+
+- name: copy custom rules files
+  copy:
+    src: "colors"
+    dest: "{{ vim_users_home[item] }}/.vim/"
+  with_items: "{{ vim_users_configure }}"

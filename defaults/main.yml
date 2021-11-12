@@ -1,0 +1,9 @@
+---
+vim_users_configure:
+  - root
+
+vim_users_home:
+  root: "/root"
+  titi: "/home/titi"
+
+vim_colorscheme: "Tomorrow-Night"
