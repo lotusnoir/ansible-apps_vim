@@ -1,26 +1,31 @@
 ---
-- name: Install package
+- name: "Install package"
   ansible.builtin.package:
     name: vim
     state: present
 
-- name: Create a new vimrc for root
+- name: "Create a new vimrc for root"
   ansible.builtin.template:
     src: vimrc.j2
     dest: "{{ vim_users_home[item] }}/.vimrc"
     mode: '0640'
   with_items: "{{ vim_users_configure }}"
 
-- name: Ensure .vim folder exists
+- name: "Ensure .vim folder exists"
   ansible.builtin.file:
     path: "{{ vim_users_home[item] }}/.vim"
     state: directory
     mode: '0755'
   with_items: "{{ vim_users_configure }}"
 
-- name: copy custom rules files
+- name: "Copy custom rules files"
   ansible.builtin.copy:
     src: "colors"
     dest: "{{ vim_users_home[item] }}/.vim/"
     mode: 0644
   with_items: "{{ vim_users_configure }}"
+
+- name: "Set vim as default editor"
+  ansible.builtin.command: "update-alternatives --set editor /usr/bin/vim.basic"
+  changed_when: false
+  when: ansible_os_family == 'Debian'
