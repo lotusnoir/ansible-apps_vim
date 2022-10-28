@@ -25,7 +25,16 @@
     mode: 0644
   with_items: "{{ vim_users_configure }}"
 
-- name: "Set vim as default editor"
+- name: "DEBIAN | Set vim as default editor"
   ansible.builtin.command: "update-alternatives --set editor /usr/bin/vim.basic"
   changed_when: false
   when: ansible_os_family == 'Debian'
+
+- name: "REDHAT | Set vim as default editor"
+  ansible.builtin.copy:
+    dest: "/etc/profile.d/editor.sh"
+    mode: 0755
+    content: |
+      export VISUAL="vim"
+      export EDITOR="vim"
+  when: ansible_os_family == 'Redhat'
