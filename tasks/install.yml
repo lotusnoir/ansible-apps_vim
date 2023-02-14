@@ -4,31 +4,55 @@
     name: vim
     state: present
 
-- name: "Create a new vimrc for root"
-  ansible.builtin.template:
-    src: vimrc.j2
-    dest: "{{ vim_users_home[item] }}/.vimrc"
-    mode: '0640'
-  with_items: "{{ vim_users_configure }}"
+- name: "Global install"
+  when: vim_install_global|bool
+  block:
+    - name: "Ensure /etc/vim folder exists"
+      ansible.builtin.file:
+        path: "/etc/vim"
+        state: directory
+        mode: '0755'
 
-- name: "Ensure .vim folder exists"
-  ansible.builtin.file:
-    path: "{{ vim_users_home[item] }}/.vim"
-    state: directory
-    mode: '0755'
-  with_items: "{{ vim_users_configure }}"
+    - name: "Create a new vimrc globaly"
+      ansible.builtin.template:
+        src: vimrc.j2
+        dest: "/etc/vim/vimrc.local"
+        mode: '0640'
 
-- name: "Copy custom rules files"
-  ansible.builtin.copy:
-    src: "colors"
-    dest: "{{ vim_users_home[item] }}/.vim/"
-    mode: 0644
-  with_items: "{{ vim_users_configure }}"
+    - name: "Copy custom rules files"
+      ansible.builtin.copy:
+        src: "colors"
+        dest: "/etc/vim/"
+        mode: 0644
+
+- name: "Users install"
+  when: not vim_install_global|bool
+  block:
+    - name: "Create a new vimrc for user"
+      ansible.builtin.template:
+        src: vimrc.j2
+        dest: "{{ vim_users_home[item] }}/.vimrc"
+        mode: '0640'
+      with_items: "{{ vim_users_configure }}"
+
+    - name: "Ensure .vim folder exists"
+      ansible.builtin.file:
+        path: "{{ vim_users_home[item] }}/.vim"
+        state: directory
+        mode: '0755'
+      with_items: "{{ vim_users_configure }}"
+
+    - name: "Copy custom rules files"
+      ansible.builtin.copy:
+        src: "colors"
+        dest: "{{ vim_users_home[item] }}/.vim/"
+        mode: 0644
+      with_items: "{{ vim_users_configure }}"
 
 - name: "DEBIAN | Set vim as default editor"
   ansible.builtin.command: "update-alternatives --set editor /usr/bin/vim.basic"
   changed_when: false
-  when: ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian' and vim_default_editor|bool
 
 - name: "REDHAT | Set vim as default editor"
   ansible.builtin.copy:
@@ -37,4 +61,4 @@
     content: |
       export VISUAL="vim"
       export EDITOR="vim"
-  when: ansible_os_family == 'Redhat'
+  when: ansible_os_family == 'Redhat' and vim_default_editor|bool

@@ -1,7 +1,10 @@
 ---
+vim_default_editor: true
+#Install for all users
+vim_install_global: true
+#Install only for some users if global set to false
 vim_users_configure:
   - root
-
 vim_users_home:
   root: "/root"
   titi: "/home/titi"
