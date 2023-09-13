@@ -48,7 +48,7 @@ endif
 
 " Permet de surligner la ligne actuelle
 set cursorline
-hi Cursorline ctermbg=black guibg=#771c1c cterm=none 
+hi Cursorline ctermbg=black guibg=#771c1c cterm=none
 
 " Indentation à la marque de Tab la plus proche
 set shiftround
@@ -72,22 +72,22 @@ filetype on
 "   if !exists('$TMUX')
 "     return a:s
 "   endif
-" 
+"
 "   let tmux_start = "\<Esc>Ptmux;"
 "   let tmux_end = "\<Esc>\\"
-" 
+"
 "   return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
 " endfunction
-" 
+"
 " let &t_SI .= WrapForTmux("\<Esc>[?2004h")
 " let &t_EI .= WrapForTmux("\<Esc>[?2004l")
-" 
+"
 " function! XTermPasteBegin()
 "   set pastetoggle=<Esc>[201~
 "   set paste
 "   return ""
 " endfunction
-" 
+"
 " inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " With a map leader it's possible to do extra key combinations
@@ -100,12 +100,12 @@ nmap <leader>w :w!<cr>
 " Fast quit
 nmap <leader>q :q!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
 " Avoid garbled characters in Chinese language windows OS
-let $LANG='en' 
+let $LANG='en'
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
@@ -150,7 +150,7 @@ set ffs=unix,dos,mac
 set nobackup
 set nowb
 set noswapfile
-set paste 
+set paste
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -163,8 +163,8 @@ set expandtab
 set smarttab
 
 " 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
+"set shiftwidth=4
+"set tabstop=4
 
 " Linebreak on 500 characters
 set lbr
@@ -191,4 +191,3 @@ set laststatus=2
 
 " Format the status line
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
-
