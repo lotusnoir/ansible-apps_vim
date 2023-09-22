@@ -1,64 +1,91 @@
 ---
-- name: "Install package"
+- name: "Install vim"
   ansible.builtin.package:
-    name: vim
+    name: "{{ item }}"
     state: present
+  loop: "{{ vim_packages }}"
 
-- name: "Global install"
-  when: vim_install_global|bool
-  block:
-    - name: "Ensure /etc/vim folder exists"
-      ansible.builtin.file:
-        path: "/etc/vim"
-        state: directory
-        mode: '0755'
+- name: "Redhat special tasks"
+  ansible.builtin.import_tasks: setup-redhat.yml
+  when: ansible_facts['os_family'] == 'RedHat'
 
-    - name: "Create a new vimrc globaly"
-      ansible.builtin.template:
-        src: vimrc.j2
-        dest: "/etc/vim/vimrc.local"
-        mode: '0640'
+- name: "Create vimrc.local file"
+  ansible.builtin.template:
+    src: vimrc.local.j2
+    dest: /etc/vim/vimrc.local
+    mode: 0644
+    owner: root
+    group: root
 
-    - name: "Copy custom rules files"
-      ansible.builtin.copy:
-        src: "colors"
-        dest: "/etc/vim/"
-        mode: 0644
+- name: "Create pathogen.vim file"
+  ansible.builtin.template:
+    src: pathogen.vim.j2
+    dest: /etc/vim/pathogen.vim
+    mode: 0644
+    owner: root
+    group: root
 
-- name: "Users install"
-  when: not vim_install_global|bool
-  block:
-    - name: "Create a new vimrc for user"
-      ansible.builtin.template:
-        src: vimrc.j2
-        dest: "{{ vim_users_home[item] }}/.vimrc"
-        mode: '0640'
-      with_items: "{{ vim_users_configure }}"
+- name: "Create airline.vim file"
+  ansible.builtin.template:
+    src: airline.vim.j2
+    dest: /etc/vim/airline.vim
+    mode: 0644
+    owner: root
+    group: root
 
-    - name: "Ensure .vim folder exists"
-      ansible.builtin.file:
-        path: "{{ vim_users_home[item] }}/.vim"
-        state: directory
-        mode: '0755'
-      with_items: "{{ vim_users_configure }}"
-
-    - name: "Copy custom rules files"
-      ansible.builtin.copy:
-        src: "colors"
-        dest: "{{ vim_users_home[item] }}/.vim/"
-        mode: 0644
-      with_items: "{{ vim_users_configure }}"
-
-- name: "DEBIAN | Set vim as default editor"
-  ansible.builtin.command: "update-alternatives --set editor /usr/bin/vim.basic"
-  changed_when: false
-  when: ansible_os_family == 'Debian' and vim_default_editor|bool
-
-- name: "REDHAT | Set vim as default editor"
-  ansible.builtin.copy:
-    dest: "/etc/profile.d/editor.sh"
+- name: "Ensure {{ vim_pathogen_dir }}/bundle directory exists"
+  ansible.builtin.file:
+    path: "{{ vim_pathogen_dir }}/bundle"
+    state: directory
     mode: 0755
-    content: |
-      export VISUAL="vim"
-      export EDITOR="vim"
-  when: ansible_os_family == 'Redhat' and vim_default_editor|bool
+    owner: root
+    group: root
+
+- name: "Deploying vim plugins from Git"
+  ansible.builtin.git:
+    dest: "{{ vim_pathogen_dir }}/bundle/{{ item.name }}"
+    repo: "{{ item.url }}"
+    clone: "yes"
+    update: "yes"
+    recursive: "no"
+  loop: "{{ pathogen_plugins }}"
+  when:
+    - vim_pathogen_dir is defined
+    - item.enabled
+
+- name: "Create individual plugin configuration file"
+  ansible.builtin.template:
+    src: "{{ item.name }}.vim.j2"
+    dest: /etc/vim/{{ item.name }}.vim
+    mode: 0644
+    owner: root
+    group: root
+  loop: "{{ pathogen_plugins }}"
+  when:
+    - vim_pathogen_dir is defined
+    - item.enabled
+
+- name: "Deploying vim cumtom plugins from Git"
+  ansible.builtin.git:
+    dest: "{{ vim_pathogen_dir }}/bundle/{{ item.name }}"
+    repo: "{{ item.url }}"
+    clone: "yes"
+    update: "yes"
+    recursive: "no"
+  loop: "{{ custom_pathogen_plugins }}"
+  when:
+    - vim_pathogen_dir is defined
+    - item.enabled
+
+- name: "Create individual custom plugin configuration file"
+  ansible.builtin.template:
+    src: "{{ item.config_file }}"
+    dest: /etc/vim/{{ item.name }}.vim
+    mode: 0644
+    owner: root
+    group: root
+  loop: "{{ custom_pathogen_plugins }}"
+  when:
+    - vim_pathogen_dir is defined
+    - item.enabled
+    - item.config_file is defined

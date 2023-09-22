@@ -1,15 +1,5 @@
 ---
-vim_default_editor: true
-#Install for all users
-vim_install_global: true
-#Install only for some users if global set to false
-vim_users_configure:
-  - root
-vim_users_home:
-  root: "/root"
-  titi: "/home/titi"
-
-vim_colorscheme: "Tomorrow-Night"
-#apprentice
-#malotru
-#zacks
+vim_pathogen_dir: /usr/share/vim/addons
+vim_color: elflord
+vim_airline_theme: luna
+custom_pathogen_plugins: []
