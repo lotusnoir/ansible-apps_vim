@@ -1,5 +1,5 @@
 ---
-vim_packages:
+_vim_packages:
   - git
   - vim
   - fonts-powerline
@@ -11,7 +11,7 @@ vim_packages:
   - vim-fugitive
   - vim-nox
 
-pathogen_plugins:
+_pathogen_plugins:
   - name: vim-colors-solarized
     url: 'https://github.com/altercation/vim-colors-solarized'
     enabled: true

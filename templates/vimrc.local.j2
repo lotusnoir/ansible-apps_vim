@@ -155,9 +155,6 @@ endif
 " Include configuration file for pathogen
 "
 if filereadable("/etc/vim/pathogen.vim")
-{% if ansible_facts['os_family'] is defined and ansible_facts['os_family'] == "RedHat" %}
-  source {{ vim_pathogen_dir }}/bundle/pathogen/autoload/pathogen.vim
-{% endif %}
   source /etc/vim/pathogen.vim
 endif
 "
@@ -167,8 +164,8 @@ if filereadable("/etc/vim/airline.vim")
   source /etc/vim/airline.vim
 endif
 
-{% if vim_pathogen_dir is defined and pathogen_plugins is defined %}
-{% for i in pathogen_plugins %}
+{% if vim_pathogen_dir is defined and _pathogen_plugins is defined %}
+{% for i in _pathogen_plugins %}
 {% if i.enabled is defined and i.enabled and i.name != "pathogen" and i.name != "airline" %}
 "
 " Include configuration file for {{ i.name }}
@@ -180,8 +177,8 @@ endif
 {% endfor %}
 {% endif %}
 
-{% if vim_pathogen_dir is defined and custom_pathogen_plugins is defined %}
-{% for i in custom_pathogen_plugins %}
+{% if vim_pathogen_dir is defined and vim_custom_pathogen_plugins is defined %}
+{% for i in vim_custom_pathogen_plugins %}
 {% if i.enabled is defined and i.enabled and i.config_file is defined %}
 "
 " Include configuration file for {{ i.name }}

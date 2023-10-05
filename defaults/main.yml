@@ -2,4 +2,4 @@
 vim_pathogen_dir: /usr/share/vim/addons
 vim_color: elflord
 vim_airline_theme: luna
-custom_pathogen_plugins: []
+vim_custom_pathogen_plugins: []

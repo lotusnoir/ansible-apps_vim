@@ -3,7 +3,7 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  loop: "{{ vim_packages }}"
+  loop: "{{ _vim_packages }}"
 
 - name: "Redhat special tasks"
   ansible.builtin.import_tasks: setup-redhat.yml
@@ -48,7 +48,7 @@
     clone: "yes"
     update: "yes"
     recursive: "no"
-  loop: "{{ pathogen_plugins }}"
+  loop: "{{ _pathogen_plugins }}"
   when:
     - vim_pathogen_dir is defined
     - item.enabled
@@ -60,7 +60,7 @@
     mode: 0644
     owner: root
     group: root
-  loop: "{{ pathogen_plugins }}"
+  loop: "{{ _pathogen_plugins }}"
   when:
     - vim_pathogen_dir is defined
     - item.enabled
@@ -72,7 +72,7 @@
     clone: "yes"
     update: "yes"
     recursive: "no"
-  loop: "{{ custom_pathogen_plugins }}"
+  loop: "{{ vim_custom_pathogen_plugins }}"
   when:
     - vim_pathogen_dir is defined
     - item.enabled
@@ -84,7 +84,7 @@
     mode: 0644
     owner: root
     group: root
-  loop: "{{ custom_pathogen_plugins }}"
+  loop: "{{ vim_custom_pathogen_plugins }}"
   when:
     - vim_pathogen_dir is defined
     - item.enabled

@@ -1,12 +1,9 @@
 ---
-vim_packages:
+_vim_packages:
   - git
   - vim
 
-pathogen_plugins:
-  - name: pathogen
-    url: 'https://github.com/tpope/vim-pathogen'
-    enabled: true
+_pathogen_plugins:
   - name: vim-colors-solarized
     url: 'https://github.com/altercation/vim-colors-solarized'
     enabled: true

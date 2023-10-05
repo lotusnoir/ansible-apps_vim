@@ -1,14 +1,11 @@
 ---
-vim_packages:
+_vim_packages:
   - git
   - vim
   - vim-ansible
   - vim-powerline
 
-pathogen_plugins:
-  - name: pathogen
-    url: 'https://github.com/tpope/vim-pathogen'
-    enabled: true
+_pathogen_plugins:
   - name: vim-devicons
     url: 'https://github.com/ryanoasis/vim-devicons'
     enabled: true
@@ -18,9 +15,9 @@ pathogen_plugins:
   - name: nerdtree
     url: 'https://github.com/preservim/nerdtree'
     enabled: true
-  #- name: vim-colors-solarized
-  #  url: 'https://github.com/altercation/vim-colors-solarized'
-  #  enabled: true
+  - name: vim-colors-solarized
+    url: 'https://github.com/altercation/vim-colors-solarized'
+    enabled: true
   - name: vim-gitgutter
     url: 'https://github.com/airblade/vim-gitgutter'
     enabled: true
