@@ -3,6 +3,10 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
+  register: pkg_result
+  retries: 12
+  delay: 10
+  until: pkg_result is success
   loop: "{{ _vim_packages }}"
 
 - name: "Redhat special tasks"
