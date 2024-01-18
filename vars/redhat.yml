@@ -28,7 +28,7 @@ _pathogen_plugins:
     url: 'https://github.com/vim-airline/vim-airline-themes'
     enabled: true
   - name: fugitive
-    url: 'https://tpope.io/vim/fugitive.git'
+    url: 'https://github.com/tpope/vim-fugitive.git'
     enabled: true
   - name: vim-jinja2-syntax
     url: 'https://github.com/Glench/Vim-Jinja2-Syntax'
