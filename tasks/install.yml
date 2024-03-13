@@ -37,7 +37,7 @@
     owner: root
     group: root
 
-- name: "Ensure {{ vim_pathogen_dir }}/bundle directory exists"
+- name: "Ensure bundle directory exists"
   ansible.builtin.file:
     path: "{{ vim_pathogen_dir }}/bundle"
     state: directory
