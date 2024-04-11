@@ -24,7 +24,7 @@
 Install and configure vimrc
 ## Requirements
 
-none
+['lotusnoir.repo-epel']
 
 ## Role variables
 
