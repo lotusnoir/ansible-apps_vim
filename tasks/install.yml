@@ -93,3 +93,9 @@
     - vim_pathogen_dir is defined
     - item.enabled
     - item.config_file is defined
+
+- name: Ensure bundle tree readable
+  ansible.builtin.file:
+    path: "/usr/share/vim/addons/bundle/"
+    mode: u=rwX,g=rX,o=rX
+    recurse: true
