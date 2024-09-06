@@ -17,7 +17,7 @@
   ansible.builtin.template:
     src: vimrc.local.j2
     dest: /etc/vim/vimrc.local
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
 
@@ -25,7 +25,7 @@
   ansible.builtin.template:
     src: pathogen.vim.j2
     dest: /etc/vim/pathogen.vim
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
 
@@ -33,7 +33,7 @@
   ansible.builtin.template:
     src: airline.vim.j2
     dest: /etc/vim/airline.vim
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
 
@@ -41,7 +41,7 @@
   ansible.builtin.file:
     path: "{{ vim_pathogen_dir }}/bundle"
     state: directory
-    mode: 0755
+    mode: '0755'
     owner: root
     group: root
 
@@ -61,7 +61,7 @@
   ansible.builtin.template:
     src: "{{ item.name }}.vim.j2"
     dest: /etc/vim/{{ item.name }}.vim
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
   loop: "{{ _pathogen_plugins }}"
@@ -85,7 +85,7 @@
   ansible.builtin.template:
     src: "{{ item.config_file }}"
     dest: /etc/vim/{{ item.name }}.vim
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
   loop: "{{ vim_custom_pathogen_plugins }}"
