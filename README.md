@@ -22,9 +22,10 @@
 ## Description
 
 Install and configure vimrc
+
 ## Requirements
 
-['lotusnoir.repo-epel']
+['lotusnoir.system_repo_epel']
 
 ## Role variables
 
@@ -39,7 +40,6 @@ See [variables](/defaults/main.yml) for more details.
           gather_facts: true
           roles:
             - role: ansible-apps_vim
-
 
 ## License
 

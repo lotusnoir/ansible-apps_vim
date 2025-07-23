@@ -1,5 +1,10 @@
 ---
+### Install
+vim_pathogen_install: false
 vim_pathogen_dir: /usr/share/vim/addons
+vim_default_pathogen_plugins_install: false
+vim_custom_pathogen_plugins: []
+
+### Config
 vim_color: elflord
 vim_airline_theme: luna
-vim_custom_pathogen_plugins: []

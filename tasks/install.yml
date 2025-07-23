@@ -1,16 +1,23 @@
 ---
+- name: "Check for binary"
+  ansible.builtin.stat:
+    path: "/usr/bin/vim"
+  changed_when: false
+  register: __installed_bin
+
 - name: "Install vim"
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  register: pkg_result
+  register: __pkg_result
   retries: 12
   delay: 10
-  until: pkg_result is success
+  until: __pkg_result is success
   loop: "{{ _vim_packages }}"
+  when: not __installed_bin.stat.exists
 
 - name: "Redhat special tasks"
-  ansible.builtin.import_tasks: setup-redhat.yml
+  ansible.builtin.include_tasks: setup-redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: "Create vimrc.local file"
@@ -28,6 +35,7 @@
     mode: '0644'
     owner: root
     group: root
+  when: vim_pathogen_install
 
 - name: "Create airline.vim file"
   ansible.builtin.template:
@@ -36,6 +44,7 @@
     mode: '0644'
     owner: root
     group: root
+  when: vim_pathogen_install
 
 - name: "Ensure bundle directory exists"
   ansible.builtin.file:
@@ -44,6 +53,7 @@
     mode: '0755'
     owner: root
     group: root
+  when: vim_pathogen_install
 
 - name: "Deploying vim plugins from Git"
   ansible.builtin.git:
@@ -54,8 +64,9 @@
     recursive: "no"
   loop: "{{ _pathogen_plugins }}"
   when:
-    - vim_pathogen_dir is defined
+    - vim_pathogen_install
     - item.enabled
+    - vim_default_pathogen_plugins_install
 
 - name: "Create individual plugin configuration file"
   ansible.builtin.template:
@@ -66,8 +77,9 @@
     group: root
   loop: "{{ _pathogen_plugins }}"
   when:
-    - vim_pathogen_dir is defined
+    - vim_pathogen_install
     - item.enabled
+    - vim_default_pathogen_plugins_install
 
 - name: "Deploying vim cumtom plugins from Git"
   ansible.builtin.git:
@@ -78,8 +90,9 @@
     recursive: "no"
   loop: "{{ vim_custom_pathogen_plugins }}"
   when:
-    - vim_pathogen_dir is defined
+    - vim_pathogen_install
     - item.enabled
+    - vim_custom_pathogen_plugins | length > 0
 
 - name: "Create individual custom plugin configuration file"
   ansible.builtin.template:
@@ -90,12 +103,16 @@
     group: root
   loop: "{{ vim_custom_pathogen_plugins }}"
   when:
-    - vim_pathogen_dir is defined
+    - vim_pathogen_install
     - item.enabled
     - item.config_file is defined
+    - vim_custom_pathogen_plugins | length > 0
 
-- name: Ensure bundle tree readable
+- name: "Ensure bundle tree readable"
   ansible.builtin.file:
     path: "/usr/share/vim/addons/bundle/"
     mode: u=rwX,g=rX,o=rX
     recurse: true
+  when:
+    - vim_pathogen_install
+    - vim_default_pathogen_plugins_install or vim_custom_pathogen_plugins | length > 0
