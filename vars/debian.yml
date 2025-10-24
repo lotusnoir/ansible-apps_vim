@@ -1,7 +1,9 @@
 ---
 _vim_packages:
-  - git
   - vim
+
+_vim_package_pathogen:
+  - git
   - fonts-powerline
   - powerline
   - vim-pathogen
